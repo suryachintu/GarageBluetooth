@@ -75,6 +75,7 @@ public class BluetoothLeService extends Service{
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            Log.d("service discovered","service discovered");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {

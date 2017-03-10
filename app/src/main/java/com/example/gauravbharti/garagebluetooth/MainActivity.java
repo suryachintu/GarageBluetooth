@@ -3,6 +3,7 @@ package com.example.gauravbharti.garagebluetooth;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
@@ -24,7 +25,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     LinearLayout layout_connected;
     LinearLayout layout_up;
+    Button register_device;
     LinearLayout layout_down;
     LinearLayout layout_disconnect;
     private LeDeviceListAdapter mLeDeviceListAdapter;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mScanning;
     private Handler mHandler;
     public Dialog dialog;
+    public Dialog dialog_register;
     private String mDeviceName;
     private String mDeviceAddress;
     ImageButton home;
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            Log.d("Initialized","Initialized");
+            Log.d("Initialized met","Initialized method");
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 //updateConnectionState(R.string.connected);
@@ -177,6 +182,7 @@ public class MainActivity extends AppCompatActivity
         dialog=new Dialog(this,R.style.FullHeightDialog);
         dialog.setContentView(R.layout.bluetoothlist);
         //processStart(BluetoothLeService.TAG);
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         Intent gattServiceIntent=new Intent(this,BluetoothLeService.class);
         bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
         home.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +230,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 try
-                {   unregisterReceiver(mGattUpdateReceiver);
+                {
+                    //unregisterReceiver(mGattUpdateReceiver);
+                    mBluetoothLeService.disconnect();
+
 
                 }
                 catch (Exception e)
@@ -306,7 +315,7 @@ public class MainActivity extends AppCompatActivity
                 viewHolder=(ViewHolder)convertView.getTag();
             }
 
-            BluetoothDevice device = mLeDevices.get(position);
+            final BluetoothDevice device = mLeDevices.get(position);
             final String deviceName = device.getName();
             if(deviceName!=null && deviceName.length()>0)
             {
@@ -320,9 +329,6 @@ public class MainActivity extends AppCompatActivity
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String str="10";
-                    final byte[] tx;
-                    tx=str.getBytes();
                     Log.d("Clicked","Clicked");
                     try
                     {   unregisterReceiver(mGattUpdateReceiver);
@@ -333,14 +339,33 @@ public class MainActivity extends AppCompatActivity
                         Log.d("Exception","Exception");
                     }
                     layout_connected.setBackgroundResource(R.color.green);
-                    Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
+
                     connection_button.setVisibility(View.VISIBLE);
-                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
+                    //boolean isConnected= mBluetoothLeService.connect(device.getAddress());
+                    mConnected=mBluetoothLeService.connect(device.getAddress());
+                    if (mConnected){
+                        //characteristicTX.setValue(tx);
+                        //mBluetoothLeService.writeCharacteristic(characteristicTX);
+                        //mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
+                        Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MainActivity.this," Not Connected",Toast.LENGTH_SHORT).show();
+                    }
+                    //device.connectGatt(getApplicationContext(),false,new BluetoothGattCallback());
+                    //device.connectGatt(this,false,mLeScanCallback);
+                    //registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
                     dialog.cancel();
+                    enter_details();
                 }
             });
             return convertView;
         }
+    }
+    public void enter_details()
+    {   dialog_register=new Dialog(this,R.style.FullHeightDialog);
+        dialog_register.setContentView(R.layout.register_device);
+        dialog_register.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
+        dialog_register.show();
     }
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -383,5 +408,19 @@ public class MainActivity extends AppCompatActivity
         intent.addCategory(tag);
         startService(intent);
 
+    }
+    public void register_name(View view)
+    {
+        Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
+        dialog_register.cancel();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+            Log.d(TAG, "Connect request result=" + result);
+        }
     }
 }
