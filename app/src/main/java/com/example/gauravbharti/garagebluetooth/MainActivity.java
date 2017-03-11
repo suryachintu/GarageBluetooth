@@ -31,11 +31,17 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -378,6 +384,7 @@ public class MainActivity extends AppCompatActivity
     public void enter_details()
     {   dialog_register=new Dialog(this,R.style.FullHeightDialog);
         dialog_register.setContentView(R.layout.register_device);
+        dialog_register.setCancelable(false);
         dialog_register.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
         dialog_register.show();
     }
@@ -431,9 +438,18 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
     public void register_name(View view)
-    {
-        Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
-        dialog_register.cancel();
+    {   EditText get_name=(EditText)dialog_register.findViewById(R.id.get_name);
+        RadioGroup radioGroup=(RadioGroup)dialog_register.findViewById(R.id.radio_group);
+        RadioButton radioButton=(RadioButton)dialog_register.findViewById(radioGroup.getCheckedRadioButtonId());
+        try
+        {   Log.d("name",get_name.getText().toString());
+            Log.d("radio",radioButton.getText().toString());
+            Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
+            dialog_register.cancel();
+        }
+        catch (Exception e)
+        {   Toast.makeText(this,"Enter all details",Toast.LENGTH_SHORT).show();
+        }
     }
     @Override
     protected void onResume() {
