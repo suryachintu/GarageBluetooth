@@ -31,6 +31,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
+                            android:id="@+id/setting_click"
                             android:src="@drawable/settings_icon_14950"
                             android:background="@color/colorPrimary"
                             android:layout_alignParentEnd="true"
@@ -49,13 +50,10 @@
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
-
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomBar"
         android:background="@color/white"
         android:layout_marginTop="?attr/actionBarSize">
         <RelativeLayout
@@ -67,52 +65,52 @@
                 android:id="@+id/connection_buttons"
                 android:weightSum="3">
                 <!-- First Button-->
-            <LinearLayout
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/buttonbg"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:id="@+id/layout_up"
-                android:gravity="center_horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UP"
-                    android:paddingTop="5dp"
-                    android:textSize="16sp" />
-                <RelativeLayout
-                    android:layout_width="70dp"
-                    android:layout_height="5dp"
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
                     android:layout_marginTop="10dp"
-                    android:background="@color/colorAccent">
-                </RelativeLayout>
-            </LinearLayout>
+                    android:background="@drawable/buttonbg"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:id="@+id/layout_up"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="UP"
+                        android:paddingTop="5dp"
+                        android:textSize="16sp" />
+                    <RelativeLayout
+                        android:layout_width="70dp"
+                        android:layout_height="5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorAccent">
+                    </RelativeLayout>
+                </LinearLayout>
 
                 <!-- Second Button-->
-            <LinearLayout
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:id="@+id/layout_disconnect"
-                android:background="@drawable/buttonbg"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Disconnect"
-                    android:paddingTop="5dp"
-                    android:textSize="16sp" />
-                <RelativeLayout
-                    android:layout_width="70dp"
-                    android:layout_height="5dp"
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
                     android:layout_marginTop="10dp"
-                    android:background="@color/colorAccent"></RelativeLayout>
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:id="@+id/layout_disconnect"
+                    android:background="@drawable/buttonbg"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Disconnect"
+                        android:paddingTop="5dp"
+                        android:textSize="16sp" />
+                    <RelativeLayout
+                        android:layout_width="70dp"
+                        android:layout_height="5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorAccent"></RelativeLayout>
+                </LinearLayout>
 
 
 
@@ -150,4 +148,6 @@
             android:layout_gravity="center"/>
 
     </FrameLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>

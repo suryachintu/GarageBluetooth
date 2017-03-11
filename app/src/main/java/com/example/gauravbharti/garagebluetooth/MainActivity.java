@@ -1,6 +1,9 @@
 package com.example.gauravbharti.garagebluetooth;
 
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCallback;
@@ -46,12 +49,14 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     LinearLayout layout_connected;
     LinearLayout layout_up;
+    ImageButton setting_button;
     Button register_device;
     LinearLayout layout_down;
     LinearLayout layout_disconnect;
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     LinearLayout connection_button;
+    RegisteredDevicesFragment registeredDevicesFragment;
     private boolean mScanning;
     private Handler mHandler;
     public Dialog dialog;
@@ -161,9 +166,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        registeredDevicesFragment=new RegisteredDevicesFragment();
         home=(ImageButton)findViewById(R.id.home_garage);
         layout_connected=(LinearLayout)findViewById(R.id.layout_connected);
         layout_up=(LinearLayout)findViewById(R.id.layout_up);
+        setting_button=(ImageButton)findViewById(R.id.setting_click);
         layout_down=(LinearLayout)findViewById(R.id.layout_down);
         layout_disconnect=(LinearLayout)findViewById(R.id.layout_disconnect);
         connection_button=(LinearLayout)findViewById(R.id.connection_buttons);
@@ -182,7 +189,7 @@ public class MainActivity extends AppCompatActivity
         dialog=new Dialog(this,R.style.FullHeightDialog);
         dialog.setContentView(R.layout.bluetoothlist);
         //processStart(BluetoothLeService.TAG);
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        //registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         Intent gattServiceIntent=new Intent(this,BluetoothLeService.class);
         bindService(gattServiceIntent,mServiceConnection,BIND_AUTO_CREATE);
         home.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +249,12 @@ public class MainActivity extends AppCompatActivity
                 }
                 layout_connected.setBackgroundResource(R.color.colorAccent);
                 connection_button.setVisibility(View.GONE);
+            }
+        });
+        setting_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchFragment(registeredDevicesFragment);
             }
         });
     }
@@ -343,6 +356,7 @@ public class MainActivity extends AppCompatActivity
                     connection_button.setVisibility(View.VISIBLE);
                     //boolean isConnected= mBluetoothLeService.connect(device.getAddress());
                     mConnected=mBluetoothLeService.connect(device.getAddress());
+                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
                     if (mConnected){
                         //characteristicTX.setValue(tx);
                         //mBluetoothLeService.writeCharacteristic(characteristicTX);
@@ -408,6 +422,13 @@ public class MainActivity extends AppCompatActivity
         intent.addCategory(tag);
         startService(intent);
 
+    }
+    public void switchFragment(Fragment targetFragment){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, targetFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
     public void register_name(View view)
     {
