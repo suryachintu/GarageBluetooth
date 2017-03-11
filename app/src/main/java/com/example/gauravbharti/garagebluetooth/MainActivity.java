@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 connection_button.setVisibility(View.GONE);
+                connection_buttons2.setVisibility(View.GONE);
                 layout_connected.setBackgroundResource(R.color.colorAccent);
                 mLeDeviceListAdapter = new LeDeviceListAdapter();
                 mLeDeviceListAdapter.clear();
@@ -535,51 +536,64 @@ public class MainActivity extends AppCompatActivity
         EditText get_name=(EditText)dialog_register.findViewById(R.id.get_name);
         RadioGroup radioGroup=(RadioGroup)dialog_register.findViewById(R.id.radio_group);
         RadioButton radioButton=(RadioButton)dialog_register.findViewById(radioGroup.getCheckedRadioButtonId());
-        JSONArray arrayObj = new JSONArray();
-        JSONArray jsonArray=new JSONArray();
-        JSONObject jsonObject=new JSONObject();
-        try
-        {   arrayObj=new JSONArray(prefs.getString("garage","[]"));
-            for (int i=0;i<arrayObj.length();i++)
-            {
-                arrayObj.get(i);
+        if(radioGroup.getCheckedRadioButtonId() == -1)
+        {
+            Toast.makeText(this,"Select type",Toast.LENGTH_SHORT).show();
+        }
+        else if(get_name.getText().toString().length()==0)
+        {   Toast.makeText(this,"Name Not Specified",Toast.LENGTH_SHORT).show();
+
+        }
+        else
+        {   JSONArray arrayObj = new JSONArray();
+            JSONArray jsonArray=new JSONArray();
+            JSONObject jsonObject=new JSONObject();
+            try
+            {   arrayObj=new JSONArray(prefs.getString("garage","[]"));
+                for (int i=0;i<arrayObj.length();i++)
+                {
+                    arrayObj.get(i);
+                }
             }
-        }
-        catch (Exception e)
-        {   Log.d("Error array","Error array");
-            arrayObj = new JSONArray();
-        }
-        try
-        {   jsonObject.put("name",get_name.getText().toString());
-            jsonObject.put("address",saveddevice.getAddress());
-            connected_address=saveddevice.getAddress();
-            jsonObject.put("type",radioButton.getText().toString());
-            jsonObject.put("password","000000");
-            Log.d("name",get_name.getText().toString());
-            Log.d("radio",radioButton.getText().toString());
-            Log.d("radio",saveddevice.getAddress());
-            arrayObj.put(jsonObject);
-            jsonArray.put(jsonObject);
+            catch (Exception e)
+            {   Log.d("Error array","Error array");
+                arrayObj = new JSONArray();
+            }
+            try
+            {   jsonObject.put("name",get_name.getText().toString());
+                jsonObject.put("address",saveddevice.getAddress());
+                connected_address=saveddevice.getAddress();
+                jsonObject.put("type",radioButton.getText().toString());
+                jsonObject.put("password","000000");
+                Log.d("name",get_name.getText().toString());
+                Log.d("radio",radioButton.getText().toString());
+                Log.d("radio",saveddevice.getAddress());
+                arrayObj.put(jsonObject);
+                jsonArray.put(jsonObject);
 //            arrayObj.put(get_name.getText().toString());
 //            arrayObj.put(saveddevice.getAddress());
 //            arrayObj.put(radioButton.getText().toString());
-            prefs.edit().putString("current",jsonArray.toString()).commit();
-            prefs.edit().putString("garage", arrayObj.toString()).commit();
-            update_name(get_name.getText().toString());
-            Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
-            if(radioButton.getText().toString().equals("Type 1"))
-            {   connection_button.setVisibility(View.VISIBLE);
+                prefs.edit().putString("current",jsonArray.toString()).commit();
+                prefs.edit().putString("garage", arrayObj.toString()).commit();
+                update_name(get_name.getText().toString());
+                Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
+                if(radioButton.getText().toString().equals("Type 1"))
+                {   connection_button.setVisibility(View.VISIBLE);
 
-            }
-            else
-            {   connection_buttons2.setVisibility(View.VISIBLE);
+                }
+                else
+                {   connection_buttons2.setVisibility(View.VISIBLE);
 
+                }
+                dialog_register.cancel();
             }
-            dialog_register.cancel();
+            catch (Exception e)
+            {   Toast.makeText(this,"Enter all details",Toast.LENGTH_SHORT).show();
+            }
+
         }
-        catch (Exception e)
-        {   Toast.makeText(this,"Enter all details",Toast.LENGTH_SHORT).show();
-        }
+
+
     }
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
