@@ -276,6 +276,12 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+        layout_up_down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         layout_disconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -444,7 +450,6 @@ public class MainActivity extends AppCompatActivity
                         Log.d("Exception","Exception");
                     }
                     layout_connected.setBackgroundResource(R.color.green);
-
                     //connection_button.setVisibility(View.VISIBLE);
                     //boolean isConnected= mBluetoothLeService.connect(device.getAddress());
                     mConnected=mBluetoothLeService.connect(device.getAddress());
