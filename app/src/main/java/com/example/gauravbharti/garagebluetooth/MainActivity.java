@@ -465,9 +465,9 @@ public class MainActivity extends AppCompatActivity
                     layout_connected.setBackgroundResource(R.color.green);
                     //connection_button.setVisibility(View.VISIBLE);
                     //boolean isConnected= mBluetoothLeService.connect(device.getAddress());
-                    mConnected=mBluetoothLeService.connect(device.getAddress());
+//                    mConnected=mBluetoothLeService.connect(device.getAddress());
                     saveddevice=device;
-                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
+//                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
                     if (mConnected){
                         //characteristicTX.setValue(tx);
                         //mBluetoothLeService.writeCharacteristic(characteristicTX);
@@ -576,7 +576,7 @@ public class MainActivity extends AppCompatActivity
                 prefs.edit().putString("current",jsonArray.toString()).commit();
                 prefs.edit().putString("garage", arrayObj.toString()).commit();
                 update_name(get_name.getText().toString());
-                Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Registered",Toast.LENGTH_SHORT).show();
                 if(radioButton.getText().toString().equals("Type 1"))
                 {   connection_button.setVisibility(View.VISIBLE);
 
@@ -585,6 +585,8 @@ public class MainActivity extends AppCompatActivity
                 {   connection_buttons2.setVisibility(View.VISIBLE);
 
                 }
+                mConnected=mBluetoothLeService.connect(saveddevice.getAddress());
+                registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
                 dialog_register.cancel();
             }
             catch (Exception e)
@@ -607,7 +609,6 @@ public class MainActivity extends AppCompatActivity
         TextView deviceName;
         TextView deviceAddress;
     }
-
     public void bluetoothenable()
     {   if(!mBluetoothAdapter.isEnabled())
         {
