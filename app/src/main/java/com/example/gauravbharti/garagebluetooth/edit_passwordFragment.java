@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -117,25 +118,31 @@ public class edit_passwordFragment extends Fragment {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.update_password(mParam1,mParam3,enter_password.getText().toString());
-                try
-                {
-                    jsonObject=new JSONObject();
-                    jsonObject.put("name",mParam3);
-                    jsonObject.put("address",mParam3);
-                    jsonObject.put("type",type);
-                    jsonObject.put("password",enter_password.getText().toString());
-                    jsonArray1.put(jsonObject);
-                    JSONArray currentj=new JSONArray();
-                    currentj.put(jsonObject);
-                    pref.edit().putString("current",currentj.toString()).commit();
-                }
-                catch (Exception e)
-                {
+                if(enter_password.getText().toString().length()<6)
+                {   Toast.makeText(mainActivity,"Password less than six digits",Toast.LENGTH_SHORT).show();
 
                 }
-                pref.edit().putString("garage",jsonArray1.toString()).commit();
-                getFragmentManager().popBackStack();
+                else
+                {   mainActivity.update_password(mParam1,mParam3,enter_password.getText().toString());
+                    try
+                    {
+                        jsonObject=new JSONObject();
+                        jsonObject.put("name",mParam3);
+                        jsonObject.put("address",mParam2);
+                        jsonObject.put("type",type);
+                        jsonObject.put("password",enter_password.getText().toString());
+                        jsonArray1.put(jsonObject);
+                        JSONArray currentj=new JSONArray();
+                        currentj.put(jsonObject);
+                        pref.edit().putString("current",currentj.toString()).commit();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    pref.edit().putString("garage",jsonArray1.toString()).commit();
+                    getFragmentManager().popBackStack();
+                }
             }
         });
         return rootView;

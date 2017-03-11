@@ -3,6 +3,8 @@ package com.example.gauravbharti.garagebluetooth;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -20,6 +25,7 @@ import java.util.ArrayList;
 public class BluetoothAddressAdapter extends BaseAdapter{
     ArrayList<Details> detailsArrayList=new ArrayList<Details>();
     Context context;
+    SharedPreferences pref;
     LayoutInflater layoutInflater;
     MainActivity mainActivity;
     edit_passwordFragment edit_passwordFragments;
@@ -64,13 +70,25 @@ public class BluetoothAddressAdapter extends BaseAdapter{
         ((ImageButton)convertView.findViewById(R.id.password_edit_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(connected_address.equals("0"))
-                {
-                    Toast.makeText(mainActivity,"Not Connected to this device",Toast.LENGTH_SHORT).show();
+
+                pref = PreferenceManager.getDefaultSharedPreferences(mainActivity.getApplicationContext());
+                JSONArray jsonArray=new JSONArray();
+                JSONObject jsonObject=new JSONObject();
+                try
+                {   jsonArray=new JSONArray(pref.getString("current","[]"));
+                    jsonObject=jsonArray.getJSONObject(0);
+                    if(jsonObject.getString("address").equals(details.getAddress()))
+                    {   edit_passwordFragments=edit_passwordFragment.newInstance(details.getPassword(),details.getAddress(),details.getName());
+                        mainActivity.switchFragment(edit_passwordFragments);
+                    }
+                    else
+                    {   Toast.makeText(mainActivity,"Not Connected to this device",Toast.LENGTH_SHORT).show();
+                    }
+
                 }
-                else
-                {   edit_passwordFragments=edit_passwordFragment.newInstance(details.getPassword(),details.getAddress(),details.getName());
-                    mainActivity.switchFragment(edit_passwordFragments);
+                catch (Exception e)
+                {   Toast.makeText(mainActivity,"Not Connected to this device",Toast.LENGTH_SHORT).show();
+
                 }
 
             }

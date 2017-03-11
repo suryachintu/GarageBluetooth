@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         connection_buttons2=(LinearLayout)findViewById(R.id.connection_buttons2);
         layout_up_down=(LinearLayout)findViewById(R.id.layout_up_down);
         layout_disconnect2=(LinearLayout)findViewById(R.id.layout_disconnect2);
@@ -222,6 +223,16 @@ public class MainActivity extends AppCompatActivity
                 layout_connected.setBackgroundResource(R.color.colorAccent);
                 mLeDeviceListAdapter = new LeDeviceListAdapter();
                 mLeDeviceListAdapter.clear();
+                try
+                {   mBluetoothLeService.disconnect();
+
+                }
+                catch (Exception e)
+                {
+
+                }
+                connected_address=null;
+                prefs.edit().putString("current","[]").commit();
                 scanLeDevice(true);
                 dialog.show();
                 listview=(ListView)dialog.findViewById(R.id.list);
@@ -290,6 +301,7 @@ public class MainActivity extends AppCompatActivity
                     //unregisterReceiver(mGattUpdateReceiver);
                     mBluetoothLeService.disconnect();
                     connected_address=null;
+                    prefs.edit().putString("current","[]").commit();
 
                 }
                 catch (Exception e)
@@ -306,7 +318,7 @@ public class MainActivity extends AppCompatActivity
                 try
                 {   mBluetoothLeService.disconnect();
                     connected_address=null;
-
+                    prefs.edit().putString("current","[]").commit();
                 }
                 catch (Exception e)
                 {
