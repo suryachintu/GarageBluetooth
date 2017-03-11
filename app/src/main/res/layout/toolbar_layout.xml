@@ -150,6 +150,60 @@
                         android:background="@color/colorAccent"></RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/connection_buttons2"
+                android:layout_below="@id/connection_buttons"
+                android:weightSum="2">
+                <!-- First Button-->
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/buttonbg"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:id="@+id/layout_up_down"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="UP/DOWN"
+                        android:paddingTop="5dp"
+                        android:textSize="16sp" />
+                    <RelativeLayout
+                        android:layout_width="70dp"
+                        android:layout_height="5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorAccent">
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!-- Second Button-->
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/layout_disconnect2"
+                    android:background="@drawable/buttonbg"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Disconnect"
+                        android:paddingTop="5dp"
+                        android:textSize="16sp" />
+                    <RelativeLayout
+                        android:layout_width="70dp"
+                        android:layout_height="5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorAccent"></RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
         <ImageButton
             android:layout_width="wrap_content"

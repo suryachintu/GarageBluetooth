@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     LinearLayout layout_connected;
     LinearLayout layout_up;
+    LinearLayout connection_buttons2;
+    LinearLayout layout_up_down;
+    LinearLayout layout_disconnect2;
     ImageButton setting_button;
     SharedPreferences prefs;
     Button register_device;
@@ -180,6 +183,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        connection_buttons2=(LinearLayout)findViewById(R.id.connection_buttons2);
+        layout_up_down=(LinearLayout)findViewById(R.id.layout_up_down);
+        layout_disconnect2=(LinearLayout)findViewById(R.id.layout_disconnect2);
         garageBluetoothApplication=(GarageBluetoothApplication)this.getApplication();
         garageBluetoothApplication.setCurrentActivity(this);
         home=(ImageButton)findViewById(R.id.home_garage);
@@ -190,6 +196,7 @@ public class MainActivity extends AppCompatActivity
         layout_disconnect=(LinearLayout)findViewById(R.id.layout_disconnect);
         connection_button=(LinearLayout)findViewById(R.id.connection_buttons);
         connection_button.setVisibility(View.GONE);
+        connection_buttons2.setVisibility(View.GONE);
         sessionManager=new SessionManager(getApplicationContext());
         mHandler = new Handler();
         final BluetoothManager bluetoothManager=(BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -285,6 +292,22 @@ public class MainActivity extends AppCompatActivity
                 }
                 layout_connected.setBackgroundResource(R.color.colorAccent);
                 connection_button.setVisibility(View.GONE);
+            }
+        });
+        layout_disconnect2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try
+                {   mBluetoothLeService.disconnect();
+                    connected_address=null;
+
+                }
+                catch (Exception e)
+                {
+
+                }
+                layout_connected.setBackgroundResource(R.color.colorAccent);
+                connection_buttons2.setVisibility(View.GONE);
             }
         });
         setting_button.setOnClickListener(new View.OnClickListener() {
@@ -422,7 +445,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     layout_connected.setBackgroundResource(R.color.green);
 
-                    connection_button.setVisibility(View.VISIBLE);
+                    //connection_button.setVisibility(View.VISIBLE);
                     //boolean isConnected= mBluetoothLeService.connect(device.getAddress());
                     mConnected=mBluetoothLeService.connect(device.getAddress());
                     saveddevice=device;
@@ -438,8 +461,45 @@ public class MainActivity extends AppCompatActivity
                     //device.connectGatt(getApplicationContext(),false,new BluetoothGattCallback());
                     //device.connectGatt(this,false,mLeScanCallback);
                     //registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
-                    dialog.cancel();
-                    enter_details();
+
+
+                    JSONArray jsonArray=new JSONArray();
+                    JSONArray jsonArray1=new JSONArray();
+                    JSONObject jsonObject=new JSONObject();
+                    try
+                    {   jsonArray=new JSONArray(prefs.getString("garage","[]"));
+                        if(jsonArray.length()==0)
+                        {
+                            dialog.cancel();
+                            enter_details();
+                        }
+                        else
+                        {   dialog.cancel();
+                            for(int i=0;i<jsonArray.length();i++)
+                            {
+                                jsonObject=jsonArray.getJSONObject(i);
+                                if(jsonObject.getString("address").equals(device.getAddress()))
+                                {
+                                    jsonArray1.put(jsonObject);
+                                    prefs.edit().putString("current",jsonArray1.toString()).commit();
+                                    if(jsonObject.getString("type").equals("Type 1"))
+                                    {   connection_button.setVisibility(View.VISIBLE);
+
+                                    }
+                                    else
+                                    {   connection_buttons2.setVisibility(View.VISIBLE);
+
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
                 }
             });
             return convertView;
@@ -490,6 +550,14 @@ public class MainActivity extends AppCompatActivity
             prefs.edit().putString("garage", arrayObj.toString()).commit();
             update_name(get_name.getText().toString());
             Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
+            if(radioButton.getText().toString().equals("Type 1"))
+            {   connection_button.setVisibility(View.VISIBLE);
+
+            }
+            else
+            {   connection_buttons2.setVisibility(View.VISIBLE);
+
+            }
             dialog_register.cancel();
         }
         catch (Exception e)
