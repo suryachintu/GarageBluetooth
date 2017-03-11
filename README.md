@@ -1,0 +1,1 @@
+https://github.com/tah-io/Tah-Android/blob/master/Tah/app/src/main/java/bleservice/BluetoothLeService.java
