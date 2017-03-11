@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,17 @@ public class edit_passwordFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final String ARG_PARAM3="param3";
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public String mParam1;
+    public String mParam2;
+    public String mParam3;
     SharedPreferences pref;
+    String type;
     Button register;
+    JSONArray jsonArray;
+    JSONArray jsonArray1;
+    JSONObject jsonObject;
     MainActivity mainActivity;
     EditText enter_password;
     private OnFragmentInteractionListener mListener;
@@ -47,16 +53,18 @@ public class edit_passwordFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param param1 Parameter 1.//Password
+     * @param param2 Parameter 2.//Address
+     * @param param3 Parameter 3.//Name
      * @return A new instance of fragment edit_passwordFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static edit_passwordFragment newInstance(String param1, String param2) {
+    public static edit_passwordFragment newInstance(String param1, String param2,String param3) {
         edit_passwordFragment fragment = new edit_passwordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3,param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,7 +75,11 @@ public class edit_passwordFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam3=getArguments().getString(ARG_PARAM3);
         }
+        jsonArray=new JSONArray();
+        jsonArray1=new JSONArray();
+        jsonObject=new JSONObject();
     }
 
     @Override
@@ -78,22 +90,49 @@ public class edit_passwordFragment extends Fragment {
         mainActivity=(MainActivity)GarageBluetoothApplication.getInstance().getCurrentActivity();
         pref = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
         String all_details=pref.getString("garage","[]");
-        JSONArray arrayObj = new JSONArray();
-        JSONObject jsonObject=new JSONObject();
         try
-        {   arrayObj=new JSONArray(all_details);
+        {   jsonArray=new JSONArray(all_details);
+            for (int i=0;i<jsonArray.length();i++)
+            {   jsonObject=jsonArray.getJSONObject(i);
+                if(jsonObject.getString("name").equals(mParam3))
+                {   type=jsonObject.getString("type");
 
+                }
+                else
+                {
+                    jsonArray1.put(jsonObject);
+                }
+
+            }
         }
         catch (Exception e)
         {
 
         }
+        Log.d("PARAM",mParam1);
+        Log.d("PARAM",mParam2);
+        Log.d("PARAM",mParam3);
         enter_password=(EditText)rootView.findViewById(R.id.enter_password);
         register=(Button)rootView.findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.update_password(mParam1,mParam3,enter_password.getText().toString());
+                try
+                {
+                    jsonObject=new JSONObject();
+                    jsonObject.put("name",mParam3);
+                    jsonObject.put("address",mParam3);
+                    jsonObject.put("type",type);
+                    jsonObject.put("password",enter_password.getText().toString());
+                    jsonArray1.put(jsonObject);
+                }
+                catch (Exception e)
+                {
 
+                }
+                pref.edit().putString("garage",jsonArray1.toString()).commit();
+                getFragmentManager().popBackStack();
             }
         });
         return rootView;

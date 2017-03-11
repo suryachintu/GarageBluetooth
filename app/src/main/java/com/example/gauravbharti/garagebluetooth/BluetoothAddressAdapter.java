@@ -69,7 +69,7 @@ public class BluetoothAddressAdapter extends BaseAdapter{
                     Toast.makeText(mainActivity,"Not Connected to this device",Toast.LENGTH_SHORT).show();
                 }
                 else
-                {   edit_passwordFragments=edit_passwordFragment.newInstance(details.getPassword(),details.getAddress());
+                {   edit_passwordFragments=edit_passwordFragment.newInstance(details.getPassword(),details.getAddress(),details.getName());
                     mainActivity.switchFragment(edit_passwordFragments);
                 }
 
