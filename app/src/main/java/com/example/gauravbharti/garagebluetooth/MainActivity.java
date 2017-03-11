@@ -16,9 +16,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -56,15 +58,18 @@ public class MainActivity extends AppCompatActivity
     LinearLayout layout_connected;
     LinearLayout layout_up;
     ImageButton setting_button;
+    SharedPreferences prefs;
     Button register_device;
     LinearLayout layout_down;
     LinearLayout layout_disconnect;
+    BluetoothDevice saveddevice = null;
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     LinearLayout connection_button;
     RegisteredDevicesFragment registeredDevicesFragment;
     private boolean mScanning;
     private Handler mHandler;
+    SessionManager sessionManager;
     public Dialog dialog;
     public Dialog dialog_register;
     private String mDeviceName;
@@ -181,6 +186,7 @@ public class MainActivity extends AppCompatActivity
         layout_disconnect=(LinearLayout)findViewById(R.id.layout_disconnect);
         connection_button=(LinearLayout)findViewById(R.id.connection_buttons);
         connection_button.setVisibility(View.GONE);
+        sessionManager=new SessionManager(getApplicationContext());
         mHandler = new Handler();
         final BluetoothManager bluetoothManager=(BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter=bluetoothManager.getAdapter();
@@ -362,6 +368,7 @@ public class MainActivity extends AppCompatActivity
                     connection_button.setVisibility(View.VISIBLE);
                     //boolean isConnected= mBluetoothLeService.connect(device.getAddress());
                     mConnected=mBluetoothLeService.connect(device.getAddress());
+                    saveddevice=device;
                     registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
                     if (mConnected){
                         //characteristicTX.setValue(tx);
@@ -387,6 +394,44 @@ public class MainActivity extends AppCompatActivity
         dialog_register.setCancelable(false);
         dialog_register.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
         dialog_register.show();
+    }
+    public void register_name(View view)
+    {   prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        Log.d("prefs",prefs.getString("garage","[]"));
+        EditText get_name=(EditText)dialog_register.findViewById(R.id.get_name);
+        RadioGroup radioGroup=(RadioGroup)dialog_register.findViewById(R.id.radio_group);
+        RadioButton radioButton=(RadioButton)dialog_register.findViewById(radioGroup.getCheckedRadioButtonId());
+        JSONArray arrayObj = new JSONArray();
+        JSONObject jsonObject=new JSONObject();
+        try
+        {   arrayObj=new JSONArray(prefs.getString("garage","[]"));
+            for (int i=0;i<arrayObj.length();i++)
+            {
+                arrayObj.get(i);
+            }
+        }
+        catch (Exception e)
+        {   Log.d("Error array","Error array");
+            arrayObj = new JSONArray();
+        }
+        try
+        {   jsonObject.put("name",get_name.getText().toString());
+            jsonObject.put("address",saveddevice.getAddress());
+            jsonObject.put("type",radioButton.getText().toString());
+            Log.d("name",get_name.getText().toString());
+            Log.d("radio",radioButton.getText().toString());
+            Log.d("radio",saveddevice.getAddress());
+            arrayObj.put(jsonObject);
+//            arrayObj.put(get_name.getText().toString());
+//            arrayObj.put(saveddevice.getAddress());
+//            arrayObj.put(radioButton.getText().toString());
+            prefs.edit().putString("garage", arrayObj.toString()).commit();
+            Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
+            dialog_register.cancel();
+        }
+        catch (Exception e)
+        {   Toast.makeText(this,"Enter all details",Toast.LENGTH_SHORT).show();
+        }
     }
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -437,20 +482,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-    public void register_name(View view)
-    {   EditText get_name=(EditText)dialog_register.findViewById(R.id.get_name);
-        RadioGroup radioGroup=(RadioGroup)dialog_register.findViewById(R.id.radio_group);
-        RadioButton radioButton=(RadioButton)dialog_register.findViewById(radioGroup.getCheckedRadioButtonId());
-        try
-        {   Log.d("name",get_name.getText().toString());
-            Log.d("radio",radioButton.getText().toString());
-            Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
-            dialog_register.cancel();
-        }
-        catch (Exception e)
-        {   Toast.makeText(this,"Enter all details",Toast.LENGTH_SHORT).show();
-        }
-    }
+
     @Override
     protected void onResume() {
         super.onResume();
