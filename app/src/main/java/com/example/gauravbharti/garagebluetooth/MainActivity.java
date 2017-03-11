@@ -497,7 +497,8 @@ public class MainActivity extends AppCompatActivity
                             {
                                 jsonObject=jsonArray.getJSONObject(i);
                                 if(jsonObject.getString("address").equals(device.getAddress()))
-                                {
+                                {   mConnected=mBluetoothLeService.connect(device.getAddress());
+                                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
                                     jsonArray1.put(jsonObject);
                                     prefs.edit().putString("current",jsonArray1.toString()).commit();
                                     if(jsonObject.getString("type").equals("Type 1"))
