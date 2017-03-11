@@ -224,7 +224,17 @@ public class MainActivity extends AppCompatActivity
         layout_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String str="10";
+                JSONObject jsonObject=new JSONObject();
+                String str=null;
+                try
+                {   JSONArray jsonArray=new JSONArray(prefs.getString("current","[]"));
+                    jsonObject=jsonArray.getJSONObject(0);
+                    str="#"+jsonObject.getString("password")+"#st#A0#00";
+                }
+                catch (Exception e)
+                {
+
+                }
                 Log.d("UP","UP");
                 final byte[] tx=str.getBytes();
                 if(mConnected) {
@@ -238,7 +248,17 @@ public class MainActivity extends AppCompatActivity
         layout_down.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String str="01";
+                JSONObject jsonObject=new JSONObject();
+                String str=null;
+                try
+                {   JSONArray jsonArray=new JSONArray(prefs.getString("current","[]"));
+                    jsonObject=jsonArray.getJSONObject(0);
+                    str="#"+jsonObject.getString("password")+"#st#B0#00";
+                }
+                catch (Exception e)
+                {
+
+                }
                 Log.d("DOWN","DOWN");
                 final byte[] tx=str.getBytes();
                 if(mConnected) {
@@ -439,6 +459,7 @@ public class MainActivity extends AppCompatActivity
         RadioGroup radioGroup=(RadioGroup)dialog_register.findViewById(R.id.radio_group);
         RadioButton radioButton=(RadioButton)dialog_register.findViewById(radioGroup.getCheckedRadioButtonId());
         JSONArray arrayObj = new JSONArray();
+        JSONArray jsonArray=new JSONArray();
         JSONObject jsonObject=new JSONObject();
         try
         {   arrayObj=new JSONArray(prefs.getString("garage","[]"));
@@ -461,9 +482,11 @@ public class MainActivity extends AppCompatActivity
             Log.d("radio",radioButton.getText().toString());
             Log.d("radio",saveddevice.getAddress());
             arrayObj.put(jsonObject);
+            jsonArray.put(jsonObject);
 //            arrayObj.put(get_name.getText().toString());
 //            arrayObj.put(saveddevice.getAddress());
 //            arrayObj.put(radioButton.getText().toString());
+            prefs.edit().putString("current",jsonArray.toString()).commit();
             prefs.edit().putString("garage", arrayObj.toString()).commit();
             update_name(get_name.getText().toString());
             Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();

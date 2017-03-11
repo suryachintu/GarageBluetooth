@@ -126,6 +126,9 @@ public class edit_passwordFragment extends Fragment {
                     jsonObject.put("type",type);
                     jsonObject.put("password",enter_password.getText().toString());
                     jsonArray1.put(jsonObject);
+                    JSONArray currentj=new JSONArray();
+                    currentj.put(jsonObject);
+                    pref.edit().putString("current",currentj.toString()).commit();
                 }
                 catch (Exception e)
                 {
