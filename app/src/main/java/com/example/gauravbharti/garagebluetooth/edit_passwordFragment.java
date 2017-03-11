@@ -1,12 +1,19 @@
 package com.example.gauravbharti.garagebluetooth;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 /**
@@ -26,7 +33,10 @@ public class edit_passwordFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    SharedPreferences pref;
+    Button register;
+    MainActivity mainActivity;
+    EditText enter_password;
     private OnFragmentInteractionListener mListener;
 
     public edit_passwordFragment() {
@@ -64,7 +74,29 @@ public class edit_passwordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_password, container, false);
+        View rootView=inflater.inflate(R.layout.fragment_edit_password, container, false);
+        mainActivity=(MainActivity)GarageBluetoothApplication.getInstance().getCurrentActivity();
+        pref = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+        String all_details=pref.getString("garage","[]");
+        JSONArray arrayObj = new JSONArray();
+        JSONObject jsonObject=new JSONObject();
+        try
+        {   arrayObj=new JSONArray(all_details);
+
+        }
+        catch (Exception e)
+        {
+
+        }
+        enter_password=(EditText)rootView.findViewById(R.id.enter_password);
+        register=(Button)rootView.findViewById(R.id.register);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

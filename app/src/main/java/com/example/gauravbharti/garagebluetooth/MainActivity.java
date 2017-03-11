@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences prefs;
     Button register_device;
     LinearLayout layout_down;
+    public String connected_address=null;
     GarageBluetoothApplication garageBluetoothApplication;
     LinearLayout layout_disconnect;
     BluetoothDevice saveddevice = null;
@@ -181,7 +182,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         garageBluetoothApplication=(GarageBluetoothApplication)this.getApplication();
         garageBluetoothApplication.setCurrentActivity(this);
-        registeredDevicesFragment=new RegisteredDevicesFragment();
         home=(ImageButton)findViewById(R.id.home_garage);
         layout_connected=(LinearLayout)findViewById(R.id.layout_connected);
         layout_up=(LinearLayout)findViewById(R.id.layout_up);
@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     //unregisterReceiver(mGattUpdateReceiver);
                     mBluetoothLeService.disconnect();
-
+                    connected_address=null;
 
                 }
                 catch (Exception e)
@@ -270,6 +270,15 @@ public class MainActivity extends AppCompatActivity
         setting_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(connected_address!=null)
+                {
+
+                }
+                else
+                {
+                    connected_address="0";
+                }
+                registeredDevicesFragment=RegisteredDevicesFragment.newInstance(connected_address);
                 switchFragment(registeredDevicesFragment);
             }
         });
@@ -445,6 +454,7 @@ public class MainActivity extends AppCompatActivity
         try
         {   jsonObject.put("name",get_name.getText().toString());
             jsonObject.put("address",saveddevice.getAddress());
+            connected_address=saveddevice.getAddress();
             jsonObject.put("type",radioButton.getText().toString());
             jsonObject.put("password","000000");
             Log.d("name",get_name.getText().toString());
@@ -455,6 +465,7 @@ public class MainActivity extends AppCompatActivity
 //            arrayObj.put(saveddevice.getAddress());
 //            arrayObj.put(radioButton.getText().toString());
             prefs.edit().putString("garage", arrayObj.toString()).commit();
+            update_name(get_name.getText().toString());
             Toast.makeText(this,"HEHEHE",Toast.LENGTH_SHORT).show();
             dialog_register.cancel();
         }
@@ -515,6 +526,26 @@ public class MainActivity extends AppCompatActivity
     {
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         return prefs.getString("garage","[]");
+    }
+    public void update_name(String name)
+    {   String str="#000000#up#"+name+"#000000#";
+        final byte[] tx=str.getBytes();
+        if(mConnected)
+        {
+            characteristicTX.setValue(tx);
+            mBluetoothLeService.writeCharacteristic(characteristicTX);
+            mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
+        }
+    }
+    public void update_password(String currpass,String username,String new_pass)
+    {   String str="#"+currpass+"#up#"+username+"#"+new_pass+"#";
+        final byte[] tx=str.getBytes();
+        if(mConnected)
+        {
+            characteristicTX.setValue(tx);
+            mBluetoothLeService.writeCharacteristic(characteristicTX);
+            mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
+        }
     }
     @Override
     protected void onResume() {

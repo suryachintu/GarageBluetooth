@@ -49,15 +49,13 @@ public class RegisteredDevicesFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment RegisteredDevicesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegisteredDevicesFragment newInstance(String param1, String param2) {
+    public static RegisteredDevicesFragment newInstance(String param1) {
         RegisteredDevicesFragment fragment = new RegisteredDevicesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,7 +65,6 @@ public class RegisteredDevicesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -121,7 +118,7 @@ public class RegisteredDevicesFragment extends Fragment {
                 Details.add(det);
             }
             ListView details_list=(ListView)rootView.findViewById(R.id.details_list);
-            details_list.setAdapter(new BluetoothAddressAdapter(getActivity().getApplicationContext(),Details));
+            details_list.setAdapter(new BluetoothAddressAdapter(getActivity().getApplicationContext(),Details,mParam1));
         }
         catch (Exception e)
         {

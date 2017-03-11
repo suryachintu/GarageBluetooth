@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,11 +23,13 @@ public class BluetoothAddressAdapter extends BaseAdapter{
     LayoutInflater layoutInflater;
     MainActivity mainActivity;
     edit_passwordFragment edit_passwordFragments;
-    public BluetoothAddressAdapter(Context context,ArrayList<Details> detailsArrayList)
+    String connected_address;
+    public BluetoothAddressAdapter(Context context,ArrayList<Details> detailsArrayList,String connected_address)
     {   super();
         this.context=context;
         layoutInflater=LayoutInflater.from(context);
         this.detailsArrayList=detailsArrayList;
+        this.connected_address=connected_address;
     }
     @Override
     public int getCount() {
@@ -61,8 +64,15 @@ public class BluetoothAddressAdapter extends BaseAdapter{
         ((ImageButton)convertView.findViewById(R.id.password_edit_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edit_passwordFragments=edit_passwordFragment.newInstance(details.getPassword(),details.getAddress());
-                mainActivity.switchFragment(edit_passwordFragments);
+                if(connected_address.equals("0"))
+                {
+                    Toast.makeText(mainActivity,"Not Connected to this device",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {   edit_passwordFragments=edit_passwordFragment.newInstance(details.getPassword(),details.getAddress());
+                    mainActivity.switchFragment(edit_passwordFragments);
+                }
+
             }
         });
         return convertView;
