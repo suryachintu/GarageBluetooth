@@ -27,6 +27,18 @@
                     <RelativeLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true">
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/uniolabs"
+                            android:id="@+id/uniolabs_img"
+                            android:foregroundGravity="center" />
+                        </LinearLayout>
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

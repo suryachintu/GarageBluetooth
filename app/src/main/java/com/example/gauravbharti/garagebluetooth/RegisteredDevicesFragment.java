@@ -6,9 +6,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 /**
@@ -25,6 +32,8 @@ public class RegisteredDevicesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     SharedPreferences pref;
+    View rootView;
+    public ArrayList<Details> Details=new ArrayList<Details>();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -66,9 +75,11 @@ public class RegisteredDevicesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView=inflater.inflate(R.layout.fragment_registered_devices, container, false);
-
+        rootView=inflater.inflate(R.layout.fragment_registered_devices, container, false);
         pref = PreferenceManager.getDefaultSharedPreferences(this.getActivity().getApplicationContext());
+        String all_details=pref.getString("garage","[]");
+        Log.d("pref",all_details);
+        setAdapter(all_details);
         return rootView;
     }
 
@@ -95,7 +106,28 @@ public class RegisteredDevicesFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+    public void setAdapter(String all_details)
+    {   try
+        {   JSONArray jsonArray=new JSONArray(all_details);
+            JSONObject jsonObject=new JSONObject();
+            Details.clear();
+            for (int i=0;i<jsonArray.length();i++)
+            {   jsonObject=jsonArray.getJSONObject(i);
+                String name=jsonObject.getString("name");
+                String address=jsonObject.getString("address");
+                String type=jsonObject.getString("type");
+                String password=jsonObject.getString("password");
+                com.example.gauravbharti.garagebluetooth.Details det=new Details(name,address,type,password);
+                Details.add(det);
+            }
+            ListView details_list=(ListView)rootView.findViewById(R.id.details_list);
+            details_list.setAdapter(new BluetoothAddressAdapter(getActivity().getApplicationContext(),Details));
+        }
+        catch (Exception e)
+        {
 
+        }
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
