@@ -342,13 +342,37 @@ public class MainActivity extends AppCompatActivity
 
             final BluetoothDevice device = mLeDevices.get(position);
             final String deviceName = device.getName();
-            if(deviceName!=null && deviceName.length()>0)
-            {
-                viewHolder.deviceName.setText(deviceName);
+            try
+            {   JSONArray jsonArray=new JSONArray();
+                JSONObject jsonObject=new JSONObject();
+                jsonArray=new JSONArray(getSharedPrefrences());
+                for(int i=0;i<jsonArray.length();i++)
+                {   jsonObject= (JSONObject) jsonArray.get(i);
+                    if(device.getAddress().equals(jsonObject.getString("address")))
+                    {
+                        viewHolder.deviceName.setText(jsonObject.getString("name"));
+                    }
+                    else
+                    {   if(deviceName!=null && deviceName.length()>0)
+                        {
+                        viewHolder.deviceName.setText(deviceName);
+                        }
+                        else
+                        {
+                            viewHolder.deviceName.setText(R.string.unknown_device);
+                        }
+                    }
+                }
             }
-            else
-            {
-                viewHolder.deviceName.setText(R.string.unknown_device);
+            catch (Exception e)
+            {   if(deviceName!=null && deviceName.length()>0)
+                {
+                    viewHolder.deviceName.setText(deviceName);
+                }
+                else
+                {
+                    viewHolder.deviceName.setText(R.string.unknown_device);
+                }
             }
             viewHolder.deviceAddress.setText(device.getAddress());
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -418,6 +442,7 @@ public class MainActivity extends AppCompatActivity
         {   jsonObject.put("name",get_name.getText().toString());
             jsonObject.put("address",saveddevice.getAddress());
             jsonObject.put("type",radioButton.getText().toString());
+            jsonObject.put("password","000000");
             Log.d("name",get_name.getText().toString());
             Log.d("radio",radioButton.getText().toString());
             Log.d("radio",saveddevice.getAddress());
@@ -482,7 +507,11 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
+    public String getSharedPrefrences()
+    {
+        prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        return prefs.getString("garage","[]");
+    }
     @Override
     protected void onResume() {
         super.onResume();

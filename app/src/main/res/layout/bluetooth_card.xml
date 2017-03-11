@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:background="@color/white">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,15 +40,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date:"
+                    android:text="Name:"
                     android:textSize="14sp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
-                    android:textColor="@color/colorAccent"/>
+                    android:textColor="@color/colorPrimary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pickup_time"
+                    android:id="@+id/name"
                     android:textSize="14sp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
@@ -67,15 +66,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total:"
+                    android:text="Type:"
                     android:textSize="14sp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:textColor="@color/colorAccent"/>
+                    android:textColor="@color/colorPrimary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pickup_amount"
+                    android:id="@+id/type"
                     android:textSize="14sp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5sp"
@@ -93,15 +92,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Transaction Id:"
+                    android:text="Password:"
                     android:textSize="14sp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5sp"
-                    android:textColor="@color/colorAccent"/>
+                    android:textColor="@color/colorPrimary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pickup_id"
+                    android:id="@+id/password"
                     android:layout_marginStart="5dp"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/colorAccent"/>
@@ -119,15 +118,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Status:"
+                    android:text="Address:"
                     android:textSize="14sp"
                     android:layout_marginStart="5dp"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorAccent"/>
+                    android:textColor="@color/colorPrimary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pickup_status"
+                    android:id="@+id/address"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
                     android:textColor="@color/colorAccent"/>
