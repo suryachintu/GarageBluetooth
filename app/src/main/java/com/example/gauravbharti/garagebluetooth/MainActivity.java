@@ -1,5 +1,6 @@
 package com.example.gauravbharti.garagebluetooth;
 
+import android.app.Application;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences prefs;
     Button register_device;
     LinearLayout layout_down;
+    GarageBluetoothApplication garageBluetoothApplication;
     LinearLayout layout_disconnect;
     BluetoothDevice saveddevice = null;
     private LeDeviceListAdapter mLeDeviceListAdapter;
@@ -177,6 +179,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        garageBluetoothApplication=(GarageBluetoothApplication)this.getApplication();
+        garageBluetoothApplication.setCurrentActivity(this);
         registeredDevicesFragment=new RegisteredDevicesFragment();
         home=(ImageButton)findViewById(R.id.home_garage);
         layout_connected=(LinearLayout)findViewById(R.id.layout_connected);
@@ -515,6 +519,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        garageBluetoothApplication.setCurrentActivity(this);
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);

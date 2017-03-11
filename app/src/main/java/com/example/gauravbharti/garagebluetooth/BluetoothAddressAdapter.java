@@ -1,10 +1,13 @@
 package com.example.gauravbharti.garagebluetooth;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,13 +20,14 @@ public class BluetoothAddressAdapter extends BaseAdapter{
     ArrayList<Details> detailsArrayList=new ArrayList<Details>();
     Context context;
     LayoutInflater layoutInflater;
+    MainActivity mainActivity;
+    edit_passwordFragment edit_passwordFragments;
     public BluetoothAddressAdapter(Context context,ArrayList<Details> detailsArrayList)
     {   super();
         this.context=context;
         layoutInflater=LayoutInflater.from(context);
         this.detailsArrayList=detailsArrayList;
     }
-
     @Override
     public int getCount() {
         return this.detailsArrayList.size();
@@ -44,7 +48,8 @@ public class BluetoothAddressAdapter extends BaseAdapter{
     {   if(convertView == null)
         {   convertView=layoutInflater.inflate(R.layout.bluetooth_card,parent,false);
         }
-        Details details=this.detailsArrayList.get(position);
+        final Details details=this.detailsArrayList.get(position);
+        mainActivity=(MainActivity) GarageBluetoothApplication.getInstance().getCurrentActivity();
         TextView name=(TextView)convertView.findViewById(R.id.name);
         TextView type=(TextView)convertView.findViewById(R.id.type);
         TextView password=(TextView)convertView.findViewById(R.id.password);
@@ -53,6 +58,13 @@ public class BluetoothAddressAdapter extends BaseAdapter{
         type.setText(details.getType());
         password.setText(details.getPassword());
         address.setText(details.getAddress());
+        ((ImageButton)convertView.findViewById(R.id.password_edit_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_passwordFragments=edit_passwordFragment.newInstance(details.getPassword(),details.getAddress());
+                mainActivity.switchFragment(edit_passwordFragments);
+            }
+        });
         return convertView;
     }
 }
