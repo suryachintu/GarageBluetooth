@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity
                 try
                 {   JSONArray jsonArray=new JSONArray(prefs.getString("current","[]"));
                     jsonObject=jsonArray.getJSONObject(0);
-                    str="#"+jsonObject.getString("password")+"#st#A0#00";
+                    str="#"+jsonObject.getString("password")+"#st#A0#00#";
                 }
                 catch (Exception e)
                 {
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity
                 try
                 {   JSONArray jsonArray=new JSONArray(prefs.getString("current","[]"));
                     jsonObject=jsonArray.getJSONObject(0);
-                    str="#"+jsonObject.getString("password")+"#st#B0#00";
+                    str="#"+jsonObject.getString("password")+"#st#B0#00#";
                 }
                 catch (Exception e)
                 {
@@ -291,7 +291,25 @@ public class MainActivity extends AppCompatActivity
         layout_up_down.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                JSONObject jsonObject=new JSONObject();
+                String str=null;
+                try
+                {   JSONArray jsonArray=new JSONArray(prefs.getString("current","[]"));
+                    jsonObject=jsonArray.getJSONObject(0);
+                    str="#"+jsonObject.getString("password")+"#st#00#0A#";
+                }
+                catch (Exception e)
+                {
 
+                }
+                Log.d("Up/DOWN","Up/DOWN");
+                final byte[] tx=str.getBytes();
+                if(mConnected) {
+                    Log.d("Up/DOWN","Up/DOWN");
+                    characteristicTX.setValue(tx);
+                    mBluetoothLeService.writeCharacteristic(characteristicTX);
+                    mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
+                }
             }
         });
         layout_disconnect.setOnClickListener(new View.OnClickListener() {
