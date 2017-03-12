@@ -483,17 +483,17 @@ public class MainActivity extends AppCompatActivity
                     layout_connected.setBackgroundResource(R.color.green);
                     //connection_button.setVisibility(View.VISIBLE);
                     //boolean isConnected= mBluetoothLeService.connect(device.getAddress());
-//                    mConnected=mBluetoothLeService.connect(device.getAddress());
+                    mConnected=mBluetoothLeService.connect(device.getAddress());
                     saveddevice=device;
-//                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
-                    if (mConnected){
-                        //characteristicTX.setValue(tx);
-                        //mBluetoothLeService.writeCharacteristic(characteristicTX);
-                        //mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
-                        Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(MainActivity.this," Not Connected",Toast.LENGTH_SHORT).show();
-                    }
+                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
+//                    if (mConnected){
+//                        //characteristicTX.setValue(tx);
+//                        //mBluetoothLeService.writeCharacteristic(characteristicTX);
+//                        //mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
+//                        Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        Toast.makeText(MainActivity.this," Not Connected",Toast.LENGTH_SHORT).show();
+//                    }
                     //device.connectGatt(getApplicationContext(),false,new BluetoothGattCallback());
                     //device.connectGatt(this,false,mLeScanCallback);
                     //registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
@@ -515,8 +515,7 @@ public class MainActivity extends AppCompatActivity
                             {
                                 jsonObject=jsonArray.getJSONObject(i);
                                 if(jsonObject.getString("address").equals(device.getAddress()))
-                                {   mConnected=mBluetoothLeService.connect(device.getAddress());
-                                    registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
+                                {
                                     jsonArray1.put(jsonObject);
                                     prefs.edit().putString("current",jsonArray1.toString()).commit();
                                     if(jsonObject.getString("type").equals("Type 1"))
@@ -594,7 +593,6 @@ public class MainActivity extends AppCompatActivity
 //            arrayObj.put(radioButton.getText().toString());
                 prefs.edit().putString("current",jsonArray.toString()).commit();
                 prefs.edit().putString("garage", arrayObj.toString()).commit();
-                update_name(get_name.getText().toString());
                 Toast.makeText(this,"Registered",Toast.LENGTH_SHORT).show();
                 if(radioButton.getText().toString().equals("Type 1"))
                 {   connection_button.setVisibility(View.VISIBLE);
@@ -604,8 +602,9 @@ public class MainActivity extends AppCompatActivity
                 {   connection_buttons2.setVisibility(View.VISIBLE);
 
                 }
-                mConnected=mBluetoothLeService.connect(saveddevice.getAddress());
-                registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
+//                mConnected=mBluetoothLeService.connect(saveddevice.getAddress());
+//                registerReceiver(mGattUpdateReceiver,makeGattUpdateIntentFilter());
+                update_name(get_name.getText().toString());
                 dialog_register.cancel();
             }
             catch (Exception e)
@@ -672,8 +671,9 @@ public class MainActivity extends AppCompatActivity
     public void update_name(String name)
     {   String str="#000000#up#"+name+"#000000#";
         final byte[] tx=str.getBytes();
+        Log.d("string",str);
         if(mConnected)
-        {
+        {   Log.d("string",str);
             characteristicTX.setValue(tx);
             mBluetoothLeService.writeCharacteristic(characteristicTX);
             mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
