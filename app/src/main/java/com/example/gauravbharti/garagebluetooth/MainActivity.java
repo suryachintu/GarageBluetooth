@@ -521,6 +521,8 @@ public class MainActivity extends AppCompatActivity
                                     if(jsonObject.getString("type").equals("Type 1"))
                                     {   connection_button.setVisibility(View.VISIBLE);
 
+
+
                                     }
                                     else
                                     {   connection_buttons2.setVisibility(View.VISIBLE);
