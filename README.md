@@ -5,5 +5,3 @@ This can be implemented to various devices like connecting it to LEDs and turnin
 Strings that have to be send to the bluetooth device can be changed.
 
 JUST GO THROUGH THE CODE.
-
-THANK YOU
