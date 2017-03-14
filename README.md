@@ -1,1 +1,2 @@
-https://github.com/tah-io/Tah-Android/blob/master/Tah/app/src/main/java/bleservice/BluetoothLeService.java
+This is a simple android app which connects to the garage door bluetooth(Bluetooth Low Energy) and help open or close the door.
+This can be implemented to various devices like connecting it to LEDs and turning them on or off, etc.
